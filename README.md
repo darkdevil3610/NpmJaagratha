@@ -1,103 +1,76 @@
- # NpmJaagratha
+# NpmJaagratha
 
- NpmJaagratha is a modern cybersecurity SaaS for Node.js and npm projects. It scans repositories for vulnerable dependencies, malicious npm packages, leaked secrets, supply chain attacks, suspicious install scripts, and dependency risk signals.
+NpmJaagratha is a modern cybersecurity dashboard for npm projects. It combines a polished landing page with live package search, advisory feeds, and a no-login analyzer for scanning `package.json` content.
 
-It also supports a lightweight, no-login package.json paste flow for instant risk summaries.
+## What it does
 
- > **Every commit. Every push. Every dependency change.**
- >
- > **You ship code. We make sure it’s clean.**
+- **Landing page:** product overview, CTA flow, and security-focused marketing UI
+- **Search:** live npm package search backed by the `/api/npm/search` proxy
+- **Feed:** latest vulnerability feed powered by NPMSCan advisories
+- **Analyzer:** paste a package name or `package.json` and review vulnerability results
+- **API routes:** server-side proxies for search, advisories, and analysis
 
- ## What this repository contains
+## Tech stack
 
- This workspace currently focuses on the marketing site and landing page experience for NpmJaagratha.
+- Next.js App Router
+- React + TypeScript
+- Tailwind CSS
+- Framer Motion
+- Lucide React
 
- - Dark-mode SaaS landing page with cybersecurity styling
- - Animated hero visual and scan preview panels
- - Trusted security monitoring, workflow, feature, pricing, and footer sections
- - Responsive layout with reusable UI primitives
- - Next.js App Router, Tailwind CSS, and Framer Motion setup
+## Pages
 
- ## Product Overview
+- `/` — home / landing page
+- `/search` — package search
+- `/feed` — vulnerability feed
+- `/analyze` — project analyzer
 
- NpmJaagratha helps Node.js teams monitor security risks across GitHub repositories and npm dependency changes.
+## API routes
 
- It is designed to detect:
+- `/api/npm/search` — npm search proxy
+- `/api/advisories` — advisories feed proxy
+- `/api/analyze` — package and `package.json` analysis proxy
 
- - vulnerable dependencies
- - malware or protestware packages
- - drainer-style package behavior
- - leaked secrets and API keys
- - typosquatting and suspicious package names
- - risky install and postinstall scripts
- - supply chain threats
- - low-trust maintainers or suspicious dependency shifts
+## Getting started
 
- ## Frontend Stack
+1. Install dependencies:
 
- - Next.js
- - Tailwind CSS
- - Framer Motion
- - Lucide React icons
+```bash
+npm install
+```
 
- ## Key Screens
+2. Start the dev server:
 
- The landing page includes:
+```bash
+npm run dev
+```
 
- - hero section with primary CTA buttons
- - no-login package.json risk summary strip
- - security monitoring feature cards
- - how-it-works flow
- - detailed security feature grid
- - live scan preview dashboard
- - Malayalam/Kerala-styled alert examples
- - pricing cards
- - footer links
+3. Open the app in your browser at the local Next.js URL.
 
- ## Project Structure
+## Available scripts
 
- - [app/layout.tsx](app/layout.tsx) - root metadata and app shell
- - [app/page.tsx](app/page.tsx) - landing page entry point
- - [app/globals.css](app/globals.css) - global styles and visual system
- - [components/landing-page.tsx](components/landing-page.tsx) - full homepage composition
- - [components/ui.tsx](components/ui.tsx) - reusable buttons, panels, labels, and metrics
+- `npm run dev` — start the development server
+- `npm run build` — create a production build
+- `npm run start` — run the production server
 
- ## Getting Started
+## Project structure
 
- 1. Install dependencies:
+- `app/layout.tsx` — root layout and metadata
+- `app/page.tsx` — landing page entry
+- `app/search/page.tsx` — search page
+- `app/feed/page.tsx` — feed page
+- `app/analyze/page.tsx` — analyzer page
+- `app/api/npm/search/route.ts` — search proxy
+- `app/api/advisories/route.ts` — advisories proxy
+- `app/api/analyze/route.ts` — analyzer proxy
+- `components/landing-page.tsx` — homepage composition
+- `components/search-packages-page.tsx` — search UI
+- `components/feed-browser.tsx` — feed UI
+- `components/ui.tsx` — shared UI primitives
+- `lib/advisories.ts` — advisory data helpers
 
- ```bash
- npm install
- ```
+## Notes
 
- 2. Start the development server:
-
- ```bash
- npm run dev
- ```
-
- 3. Open the site in your browser at the local Next.js URL.
-
- ## Available Scripts
-
- - `npm run dev` - start the local development server
- - `npm run build` - create a production build
- - `npm run start` - run the production server
-
- ## Design Direction
-
- The interface uses:
-
- - dark black and charcoal backgrounds
- - neon green security accents
- - terminal-inspired panels
- - glassmorphism cards
- - grid overlays and glow effects
- - smooth Framer Motion transitions
-
- ## Notes
-
- - The landing page is built to feel premium, dev-focused, and trustworthy.
- - The cultural touch is intentionally subtle and limited to a few alert examples and copy cues.
- - The current product direction includes a no-login package.json paste experience before any GitHub integration.
- - No backend scanner is implemented yet; the current scope is the marketing and product presentation layer.
+- The analyzer is designed for a no-login workflow.
+- Vulnerability results are displayed as readable cards and linked out to OSV.
+- The UI uses a dark, high-contrast security theme.
