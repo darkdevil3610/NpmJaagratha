@@ -1,266 +1,103 @@
-# NpmJaagratha
+ # NpmJaagratha
 
-> **Every commit. Every push. Every dependency change.**  
-> Automatically scanned for vulnerabilities, secrets, supply chain attacks, and security loopholes.
+ NpmJaagratha is a modern cybersecurity SaaS for Node.js and npm projects. It scans repositories for vulnerable dependencies, malicious npm packages, leaked secrets, supply chain attacks, suspicious install scripts, and dependency risk signals.
 
-**Tagline:**  
-**You ship code. We make sure it’s clean.**
+It also supports a lightweight, no-login package.json paste flow for instant risk summaries.
 
----
+ > **Every commit. Every push. Every dependency change.**
+ >
+ > **You ship code. We make sure it’s clean.**
 
-## Core MVP Idea
+ ## What this repository contains
 
-NpmJaagratha is a GitHub-integrated security scanner focused on npm and `package.json` security.
+ This workspace currently focuses on the marketing site and landing page experience for NpmJaagratha.
 
-User connects a GitHub repository, then NpmJaagratha scans:
+ - Dark-mode SaaS landing page with cybersecurity styling
+ - Animated hero visual and scan preview panels
+ - Trusted security monitoring, workflow, feature, pricing, and footer sections
+ - Responsive layout with reusable UI primitives
+ - Next.js App Router, Tailwind CSS, and Framer Motion setup
 
-- dependencies
-- lockfiles
-- commits
-- pull requests
-- secrets
-- malicious install scripts
-- typo-squatting packages
+ ## Product Overview
 
-Then reports:
+ NpmJaagratha helps Node.js teams monitor security risks across GitHub repositories and npm dependency changes.
 
-- risk score
-- alerts
-- safe/unsafe badge
-- fix suggestions
+ It is designed to detect:
 
----
+ - vulnerable dependencies
+ - malware or protestware packages
+ - drainer-style package behavior
+ - leaked secrets and API keys
+ - typosquatting and suspicious package names
+ - risky install and postinstall scripts
+ - supply chain threats
+ - low-trust maintainers or suspicious dependency shifts
 
-## MVP Features (v1)
+ ## Frontend Stack
 
-### 1) GitHub Login
+ - Next.js
+ - Tailwind CSS
+ - Framer Motion
+ - Lucide React icons
 
-- GitHub OAuth sign-in
-- User flow:
-  1. Login with GitHub
-  2. Select repository
-  3. Install GitHub App
+ ## Key Screens
 
-### 2) Automatic Repository Scanning
+ The landing page includes:
 
-Scans trigger on:
+ - hero section with primary CTA buttons
+ - no-login package.json risk summary strip
+ - security monitoring feature cards
+ - how-it-works flow
+ - detailed security feature grid
+ - live scan preview dashboard
+ - Malayalam/Kerala-styled alert examples
+ - pricing cards
+ - footer links
 
-- push
-- pull request
-- `package.json` changes
-- `package-lock.json` changes
+ ## Project Structure
 
-Detects:
+ - [app/layout.tsx](app/layout.tsx) - root metadata and app shell
+ - [app/page.tsx](app/page.tsx) - landing page entry point
+ - [app/globals.css](app/globals.css) - global styles and visual system
+ - [components/landing-page.tsx](components/landing-page.tsx) - full homepage composition
+ - [components/ui.tsx](components/ui.tsx) - reusable buttons, panels, labels, and metrics
 
-- known CVEs
-- malicious packages
-- suspicious scripts
-- abandoned packages
-- typo-squatting
-- leaked secrets
+ ## Getting Started
 
-### 3) Dependency Security Scanner
+ 1. Install dependencies:
 
-Inputs:
+ ```bash
+ npm install
+ ```
 
-- `package.json`
-- `package-lock.json`
+ 2. Start the development server:
 
-Data sources / engines:
+ ```bash
+ npm run dev
+ ```
 
-- npm audit API
-- OSV.dev
-- Snyk vulnerability database
-- Socket.dev signals
+ 3. Open the site in your browser at the local Next.js URL.
 
-Checks:
+ ## Available Scripts
 
-- vulnerable versions
-- install/postinstall scripts
-- obfuscated code
-- crypto miners
-- protestware
-- malware packages
+ - `npm run dev` - start the local development server
+ - `npm run build` - create a production build
+ - `npm run start` - run the production server
 
-### 4) Secret Scanner
+ ## Design Direction
 
-Detects:
+ The interface uses:
 
-- API keys
-- AWS secrets
-- JWT secrets
-- private tokens
-- `.env` leaks
+ - dark black and charcoal backgrounds
+ - neon green security accents
+ - terminal-inspired panels
+ - glassmorphism cards
+ - grid overlays and glow effects
+ - smooth Framer Motion transitions
 
-Methods:
+ ## Notes
 
-- regex scanning
-- entropy detection
-
-### 5) Risk Score
-
-| Score  | Status  |
-| ------ | ------- |
-| 0-20   | Safe    |
-| 21-50  | Warning |
-| 51-100 | Danger  |
-
-Example scoring:
-
-- vulnerable dependency: `+20`
-- exposed secret: `+40`
-- malicious install script: `+50`
-
-### 6) PR Comments (Important MVP Feature)
-
-Example bot comment:
-
-```txt
-⚠️ NpmJaagratha Report
-
-2 risky packages detected:
-- event-stream@3.3.6
-- flatmap-stream@0.1.1
-
-1 exposed API key found.
-
-Risk Score: 72/100
-```
-
-### 7) Dashboard
-
-Repo Overview:
-
-- total packages
-- vulnerabilities
-- secrets found
-- suspicious packages
-- security score
-
-Dependency Graph:
-
-- simple tree view
-
----
-
-## Tech Stack
-
-### Frontend
-
-- Next.js
-- Tailwind CSS
-- shadcn/ui
-
-### Backend
-
-- Node.js
-- Express or NestJS
-
-### Database
-
-- PostgreSQL
-
-### Queue
-
-- BullMQ + Redis
-
-### Scanning Engine
-
-- npm audit
-- osv-scanner
-- semgrep
-- trufflehog
-- custom heuristics
-
-### Hosting
-
-- Vercel (frontend)
-- Railway / Fly.io / Render (backend)
-
----
-
-## MVP Architecture
-
-```txt
-GitHub Webhook
-      ↓
-NpmJaagratha API
-      ↓
-Queue Worker
-      ↓
-Security Scanners
-      ↓
-Risk Engine
-      ↓
-Dashboard + PR Comments
-```
-
----
-
-## Post-MVP Ideas (v2)
-
-### AI Security Explainer
-
-Explain vulnerabilities in simple English, for example:
-
-> This package can execute malicious code during install.
-
-### Malware Behavior Detection
-
-Detect suspicious behavior patterns such as:
-
-- `eval()`
-- `child_process` abuse
-- network beacons
-- crypto miners
-
-### Trust Score
-
-Analyze:
-
-- maintainer reputation
-- package age
-- download anomalies
-- sudden ownership changes
-
-### Kerala Branding Touch
-
-```txt
-⚠️ Jaagratha!
-Ithu risky dependency aanu.
-```
-
-```txt
-🛑 Visham detected in dependency tree.
-```
-
----
-
-## Landing Page Copy
-
-### Hero
-
-# NpmJaagratha
-
-### Every commit. Every push. Every dependency change.
-
-Automatically scan your Node.js projects for:
-
-- vulnerable dependencies
-- malware packages
-- leaked secrets
-- supply chain attacks
-
-**You ship code. We make sure it’s clean.**
-
-[ Connect GitHub ]
-
-### What Makes This Special
-
-Most tools only check CVEs. NpmJaagratha focuses on:
-
-- npm malware
-- supply chain attacks
-- malicious install scripts
-- suspicious maintainer behavior
-- developer-friendly UX
+ - The landing page is built to feel premium, dev-focused, and trustworthy.
+ - The cultural touch is intentionally subtle and limited to a few alert examples and copy cues.
+ - The current product direction includes a no-login package.json paste experience before any GitHub integration.
+ - No backend scanner is implemented yet; the current scope is the marketing and product presentation layer.
