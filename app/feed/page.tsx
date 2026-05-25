@@ -26,6 +26,7 @@ export default async function FeedPage() {
 
           <div className="flex items-center gap-3">
             <Button variant="ghost" href="/">Home</Button>
+            <Button variant="ghost" href="/search">Search</Button>
             <Button variant="secondary" href="https://npmscan.com/api/advisories/latest" target="_blank" rel="noreferrer">
               API <ExternalLink className="h-4 w-4" />
             </Button>

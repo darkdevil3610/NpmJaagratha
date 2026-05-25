@@ -368,6 +368,7 @@ export function LandingPage() {
           </div>
 
           <div className="hidden items-center gap-3 md:flex">
+            <Button variant="ghost" href="/search">Search</Button>
             <Button variant="ghost" href="/feed">FEED</Button>
             <Button variant="ghost" href="#features">Features</Button>
             <Button variant="ghost" href="#pricing">Pricing</Button>
