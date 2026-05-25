@@ -370,6 +370,7 @@ export function LandingPage() {
           <div className="hidden items-center gap-3 md:flex">
             <Button variant="ghost" href="/search">Search</Button>
             <Button variant="ghost" href="/feed">FEED</Button>
+            <Button variant="ghost" href="/analyze">Analyzer</Button>
             <Button variant="ghost" href="#features">Features</Button>
             <Button variant="ghost" href="#pricing">Pricing</Button>
             <Button variant="secondary" href="#scan-preview">View Demo</Button>
@@ -403,7 +404,7 @@ export function LandingPage() {
             </div>
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <Button href="#package-json-scan" variant="primary">
+              <Button href="/analyze" variant="primary">
                 Paste package.json <ArrowRight className="h-4 w-4" />
               </Button>
               <Button href="#scan-preview" variant="secondary">
@@ -567,7 +568,7 @@ export function LandingPage() {
               </p>
             </div>
             <div className="flex flex-wrap gap-3">
-              <Button href="#scan-preview" variant="primary">
+              <Button href="/analyze" variant="primary">
                 View risk summary <ArrowRight className="h-4 w-4" />
               </Button>
               <Button href="#scan-preview" variant="secondary">
