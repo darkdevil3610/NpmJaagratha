@@ -53,12 +53,6 @@ const alerts = [
   { tone: 'emerald', title: '🔍 Package sookshikkanam.', text: 'Lockfile diff reviewed. No secret leaks and no suspicious postinstall scripts.' },
 ];
 
-const pricing = [
-  { name: 'Free', price: '$0', text: 'For solo maintainers and experimental repos.', cta: 'Start scanning' },
-  { name: 'Pro', price: '$29', text: 'For teams shipping Node.js apps every day.', cta: 'Upgrade to Pro', featured: true },
-  { name: 'Enterprise', price: 'Custom', text: 'For regulated environments and large monorepos.', cta: 'Talk to us' },
-];
-
 export type FeedItem = {
   title: string;
   subtitle: string;
@@ -350,13 +344,19 @@ function ScanTimeline() {
 }
 
 export function LandingPage() {
+  const navLinks = [
+    { label: 'Search', href: '/search' },
+    { label: 'FEED', href: '/feed' },
+    { label: 'Features', href: '#features' },
+  ];
+
   return (
     <main className="relative overflow-hidden">
       <div className="absolute inset-0 grid-overlay opacity-40" />
       <div className="absolute left-1/2 top-0 h-[540px] w-[540px] -translate-x-1/2 rounded-full bg-emerald-400/[0.08] blur-[100px]" />
 
       <div className="relative mx-auto max-w-7xl px-6 py-6 sm:px-8 lg:px-10">
-        <header className="flex items-center justify-between rounded-full border border-white/[0.08] bg-black/25 px-4 py-3 backdrop-blur-xl">
+        <header className="flex items-center justify-between rounded-[2rem] border border-emerald-400/15 bg-[linear-gradient(120deg,rgba(5,22,14,0.9),rgba(4,9,14,0.92))] px-4 py-3 shadow-[0_18px_60px_rgba(0,0,0,0.36)] backdrop-blur-xl sm:px-5">
           <div className="flex items-center gap-3">
             <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-emerald-400/20 bg-emerald-400/10 text-emerald-200 shadow-[0_0_28px_rgba(124,255,107,0.18)]">
               <ShieldCheck className="h-5 w-5" />
@@ -368,12 +368,24 @@ export function LandingPage() {
           </div>
 
           <div className="hidden items-center gap-3 md:flex">
-            <Button variant="ghost" href="/search">Search</Button>
-            <Button variant="ghost" href="/feed">FEED</Button>
-            <Button variant="ghost" href="/analyze">Analyzer</Button>
-            <Button variant="ghost" href="#features">Features</Button>
-            <Button variant="ghost" href="#pricing">Pricing</Button>
-            <Button variant="secondary" href="#scan-preview">View Demo</Button>
+            <nav className="flex items-center gap-1 rounded-full border border-white/10 bg-black/25 p-1.5">
+              {navLinks.map((link) => (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  className="rounded-full px-4 py-2 text-sm font-semibold text-zinc-200 transition hover:bg-white/10 hover:text-white"
+                >
+                  {link.label}
+                </a>
+              ))}
+            </nav>
+            <Button
+              variant="secondary"
+              href="/analyze"
+              className="border-emerald-300/25 bg-emerald-300/10 text-emerald-100 hover:border-emerald-200/40 hover:bg-emerald-300/15"
+            >
+              Analyzer
+            </Button>
           </div>
         </header>
 
@@ -523,36 +535,6 @@ export function LandingPage() {
                 <div className="text-sm font-semibold text-white">{alert.title}</div>
                 <p className="mt-3 text-sm leading-7 text-zinc-400">{alert.text}</p>
               </div>
-            ))}
-          </div>
-        </section>
-
-        <section className="pb-24" id="pricing">
-          <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <SectionLabel>Pricing</SectionLabel>
-              <h2 className="mt-4 text-3xl font-semibold text-white sm:text-4xl">Start small. Scale confidently.</h2>
-            </div>
-            <p className="max-w-xl text-sm leading-7 text-zinc-400">
-              Flexible plans for solo maintainers, fast-moving teams, and enterprise security programs.
-            </p>
-          </div>
-
-          <div className="grid gap-4 lg:grid-cols-3">
-            {pricing.map((plan) => (
-              <Panel key={plan.name} className={plan.featured ? 'border-emerald-400/25 bg-emerald-400/[0.06]' : ''}>
-                {plan.featured ? (
-                  <div className="mb-4 inline-flex rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1 text-xs font-medium uppercase tracking-[0.24em] text-emerald-200">
-                    Most popular
-                  </div>
-                ) : null}
-                <div className="text-sm uppercase tracking-[0.24em] text-zinc-500">{plan.name}</div>
-                <div className="mt-3 text-4xl font-semibold text-white">{plan.price}</div>
-                <p className="mt-3 text-sm leading-7 text-zinc-400">{plan.text}</p>
-                <Button variant={plan.featured ? 'primary' : 'secondary'} href="#connect" className="mt-6 w-full">
-                  {plan.cta}
-                </Button>
-              </Panel>
             ))}
           </div>
         </section>

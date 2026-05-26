@@ -3,14 +3,70 @@ import { NextResponse } from 'next/server';
 type OsvBatchItem = {
   ecosystem: 'npm';
   name: string;
+  version?: string;
 };
 
-function toPackageQuery(name: string): OsvBatchItem {
-  return { ecosystem: 'npm', name };
+function toPackageQuery(name: string, version?: string): OsvBatchItem {
+  return version ? { ecosystem: 'npm', name, version } : { ecosystem: 'npm', name };
 }
 
 function normalizePackageName(value: unknown) {
   return typeof value === 'string' ? value.trim() : '';
+}
+
+function normalizeVersion(value: unknown) {
+  if (typeof value !== 'string') {
+    return undefined;
+  }
+
+  const raw = value.trim();
+  if (!raw) {
+    return undefined;
+  }
+
+  if (
+    raw.startsWith('workspace:')
+    || raw.startsWith('file:')
+    || raw.startsWith('link:')
+    || raw.startsWith('git+')
+    || raw.startsWith('github:')
+    || raw.startsWith('http://')
+    || raw.startsWith('https://')
+  ) {
+    return undefined;
+  }
+
+  const npmAliasMatch = raw.match(/^npm:[^@]+@(.+)$/);
+  const candidate = npmAliasMatch ? npmAliasMatch[1] : raw;
+
+  const semverMatch = candidate.match(/\d+\.\d+\.\d+(?:-[0-9A-Za-z-.]+)?/);
+  return semverMatch?.[0];
+}
+
+function collectDependenciesWithVersions(parsed: Record<string, unknown>) {
+  const dependencySections = ['dependencies', 'devDependencies', 'peerDependencies', 'optionalDependencies'];
+  const entries = new Map<string, string | undefined>();
+
+  for (const section of dependencySections) {
+    const block = parsed[section];
+    if (!block || typeof block !== 'object' || Array.isArray(block)) {
+      continue;
+    }
+
+    for (const [name, versionRange] of Object.entries(block)) {
+      const normalizedName = normalizePackageName(name);
+      if (!normalizedName) {
+        continue;
+      }
+
+      const normalizedVersion = normalizeVersion(versionRange);
+      if (!entries.has(normalizedName) || normalizedVersion) {
+        entries.set(normalizedName, normalizedVersion);
+      }
+    }
+  }
+
+  return Array.from(entries.entries()).map(([name, version]) => ({ name, version }));
 }
 
 async function fetchVulnerabilities(packages: OsvBatchItem[]) {
@@ -51,27 +107,49 @@ async function fetchVulnerabilities(packages: OsvBatchItem[]) {
 export async function POST(request: Request) {
   const body = await request.json().catch(() => ({}));
 
-  let packages: string[] = [];
-  if (typeof body.package === 'string') {
-    packages = [body.package];
-  } else if (Array.isArray(body.packages)) {
-    packages = body.packages.filter((p) => typeof p === 'string');
-  } else if (typeof body.packageJson === 'string') {
+  let packageQueries: OsvBatchItem[] = [];
+
+  if (typeof body.packageJson === 'string') {
     try {
       const parsed = JSON.parse(body.packageJson);
-      const deps = Object.assign({}, parsed.dependencies ?? {}, parsed.devDependencies ?? {});
-      packages = Object.keys(deps);
+
+      if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+        return NextResponse.json({ error: 'Invalid packageJson' }, { status: 400 });
+      }
+
+      const deps = collectDependenciesWithVersions(parsed as Record<string, unknown>);
+      packageQueries = deps
+        .slice(0, 80)
+        .map(({ name, version }) => toPackageQuery(name, version));
     } catch (e) {
       return NextResponse.json({ error: 'Invalid packageJson' }, { status: 400 });
     }
+  } else if (typeof body.package === 'string') {
+    packageQueries = [toPackageQuery(body.package)];
+  } else if (Array.isArray(body.packages)) {
+    packageQueries = body.packages
+      .filter((p) => typeof p === 'string')
+      .map((name) => toPackageQuery(name));
   }
 
-  if (packages.length === 0) {
+  if (packageQueries.length === 0) {
     return NextResponse.json({ results: [] });
   }
 
-  const unique = Array.from(new Set(packages.map(normalizePackageName).filter(Boolean))).slice(0, 60);
-  const query = unique.map(toPackageQuery);
+  const deduped = new Map<string, OsvBatchItem>();
+  for (const item of packageQueries) {
+    const name = normalizePackageName(item.name);
+    if (!name) {
+      continue;
+    }
+
+    const dedupeKey = item.version ? `${name}@${item.version}` : name;
+    if (!deduped.has(dedupeKey)) {
+      deduped.set(dedupeKey, toPackageQuery(name, item.version));
+    }
+  }
+
+  const query = Array.from(deduped.values()).slice(0, 80);
   const response = await fetchVulnerabilities(query);
 
   if (!response.ok) {
