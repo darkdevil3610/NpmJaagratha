@@ -128,8 +128,8 @@ export async function POST(request: Request) {
     packageQueries = [toPackageQuery(body.package)];
   } else if (Array.isArray(body.packages)) {
     packageQueries = body.packages
-      .filter((p) => typeof p === 'string')
-      .map((name) => toPackageQuery(name));
+      .filter((p: unknown): p is string => typeof p === 'string')
+      .map((name: string) => toPackageQuery(name));
   }
 
   if (packageQueries.length === 0) {
