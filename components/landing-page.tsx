@@ -89,7 +89,11 @@ const defaultFeedItems: FeedItem[] = [
   },
 ];
 
-const footerLinks = ['GitHub', 'Documentation', 'API', 'Security', 'Contact'];
+const footerLinks = [
+  { label: 'GitHub', href: 'https://github.com/darkdevil3610/NpmJaagratha' },
+  { label: 'Security', href: '/security' },
+  { label: 'Contact', href: '/contact' },
+];
 
 type LiveFeedProps = {
   items?: FeedItem[];
@@ -568,8 +572,14 @@ export function LandingPage() {
             </div>
             <div className="flex flex-wrap gap-5">
               {footerLinks.map((link) => (
-                <a key={link} href="#" className="transition hover:text-emerald-200">
-                  {link}
+                <a
+                  key={link.label}
+                  href={link.href}
+                  className="transition hover:text-emerald-200"
+                  target={link.href.startsWith('http') ? '_blank' : undefined}
+                  rel={link.href.startsWith('http') ? 'noreferrer' : undefined}
+                >
+                  {link.label}
                 </a>
               ))}
             </div>
