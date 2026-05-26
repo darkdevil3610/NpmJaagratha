@@ -78,4 +78,3 @@ This repository is provided under the terms of the LICENSE file in the project r
 
 ---
 
-If you'd like, I can also add a short project demo GIF to the README or wire up a GitHub Actions workflow for CI — which would you prefer next?
