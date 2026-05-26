@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from 'react';
-import { AlertTriangle, FileJson2, ShieldCheck } from 'lucide-react';
+import { AlertTriangle, FileJson2, ShieldCheck, Lightbulb } from 'lucide-react';
 import { Button } from '@/components/ui';
 
 type AnalyzeResult = {
@@ -213,6 +213,63 @@ export default function AnalyzerPage() {
                 <Button onClick={() => scanPackageJson(packageJson)} disabled={loading}>
                   {loading ? 'Scanning...' : 'Scan package.json'}
                 </Button>
+              </div>
+              <div className="mt-6 rounded-2xl border border-white/10 bg-[#071021]/80 p-5">
+                <div className="flex items-center gap-3">
+                  <div className="rounded-full bg-gradient-to-br from-yellow-500 to-amber-600 p-2 text-black">
+                    <Lightbulb className="h-4 w-4" />
+                  </div>
+                  <div>
+                    <div className="text-sm font-semibold uppercase tracking-[0.12em] text-white">PACKAGE.JSON TIPS</div>
+                    <div className="mt-1 text-xs text-zinc-400">Simple package.json hygiene tips to reduce risk and improve determinism.</div>
+                  </div>
+                </div>
+
+                <div className="mt-4 space-y-4">
+                  <div className="rounded-lg border border-white/6 bg-black/40 p-4">
+                    <div className="text-sm font-semibold text-emerald-200">Use Overrides for Safety</div>
+                    <div className="mt-2 text-xs text-zinc-400">Force specific versions of dependencies to avoid compatibility issues and security vulnerabilities:</div>
+                    <pre className="mt-3 overflow-auto rounded-md border border-white/6 bg-black/30 p-3 font-mono text-xs text-zinc-200">{`{
+  "overrides": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  }
+}`}</pre>
+                    <div className="mt-2 text-xs text-zinc-500">Ensures all packages use the same React version, preventing version conflicts.</div>
+                  </div>
+
+                  <div className="rounded-lg border border-white/6 bg-black/40 p-4">
+                    <div className="text-sm font-semibold text-emerald-200">Pin Your Package Manager</div>
+                    <div className="mt-2 text-xs text-zinc-400">Lock your team to the same package manager version to avoid resolver changes:</div>
+                    <pre className="mt-3 overflow-auto rounded-md border border-white/6 bg-black/30 p-3 font-mono text-xs text-zinc-200">{`{
+  "packageManager": "npm@10.8.1"
+}`}</pre>
+                  </div>
+
+                  <div className="rounded-lg border border-white/6 bg-black/40 p-4">
+                    <div className="text-sm font-semibold text-emerald-200">Declare Runtime Versions</div>
+                    <div className="mt-2 text-xs text-zinc-400">Signal supported Node and npm versions:</div>
+                    <pre className="mt-3 overflow-auto rounded-md border border-white/6 bg-black/30 p-3 font-mono text-xs text-zinc-200">{`{
+  "engines": {
+    "node": ">=18.18 <21",
+    "npm": "^10"
+  }
+}`}</pre>
+                  </div>
+
+                  <div className="rounded-lg border border-white/6 bg-black/40 p-4">
+                    <div className="text-sm font-semibold text-emerald-200">Prevent Accidental Publish</div>
+                    <div className="mt-2 text-xs text-zinc-400">Mark non-library apps as private to block npm publish:</div>
+                    <pre className="mt-3 overflow-auto rounded-md border border-white/6 bg-black/30 p-3 font-mono text-xs text-zinc-200">{`{
+  "private": true
+}`}</pre>
+                  </div>
+
+                  <div className="rounded-lg border border-white/6 bg-black/40 p-4">
+                    <div className="text-sm font-semibold text-emerald-200">Semver Ranges: Know Your Risk</div>
+                    <div className="mt-2 text-xs text-zinc-400">Prefer exact or tilde ranges for critical deps; caret ranges can pull in unexpected minor versions.</div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
