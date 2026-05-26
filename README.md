@@ -1,76 +1,81 @@
 # NpmJaagratha
 
-NpmJaagratha is a modern cybersecurity dashboard for npm projects. It combines a polished landing page with live package search, advisory feeds, and a no-login analyzer for scanning `package.json` content.
+NpmJaagratha is a lightweight, no-login security dashboard for npm projects. Paste a `package.json` or search packages to get actionable vulnerability and supply-chain insights.
 
-## What it does
+---
 
-- **Landing page:** product overview, CTA flow, and security-focused marketing UI
-- **Search:** live npm package search backed by the `/api/npm/search` proxy
-- **Feed:** latest vulnerability feed powered by NPMSCan advisories
-- **Analyzer:** paste a package name or `package.json` and review vulnerability results
-- **API routes:** server-side proxies for search, advisories, and analysis
+## Key features
+
+- Fast, privacy-first analysis: paste `package.json` content locally (no account required) and receive a version-aware vulnerability summary.
+- Live vulnerability feed: curated advisories from NPMSCan/GitHub Advisory Database.
+- Package search: explore npm packages and view risk signals.
+- Readable results: human-friendly vulnerability cards with OSV links and remediation context.
 
 ## Tech stack
 
-- Next.js App Router
+- Next.js (App Router)
 - React + TypeScript
-- Tailwind CSS
-- Framer Motion
-- Lucide React
+- Tailwind CSS for styling
+- Framer Motion for subtle UI motion
+- Lucide React for icons
 
 ## Pages
 
-- `/` — home / landing page
-- `/search` — package search
-- `/feed` — vulnerability feed
-- `/analyze` — project analyzer
+- `/` — Landing page and product overview
+- `/search` — Package search UI
+- `/feed` — Live vulnerability feed
+- `/analyze` — Paste a `package.json` or package name to scan
+- `/contact` — Contact / LinkedIn
+- `/security` — Security reporting guidance
 
-## API routes
+## Server APIs
 
-- `/api/npm/search` — npm search proxy
-- `/api/advisories` — advisories feed proxy
-- `/api/analyze` — package and `package.json` analysis proxy
+- `GET /api/npm/search` — npm search proxy
+- `GET /api/advisories` — advisories feed proxy
+- `POST /api/analyze` — package and `package.json` analysis proxy (server-side)
 
-## Getting started
+## Quick start
 
-1. Install dependencies:
+1. Install dependencies
 
 ```bash
 npm install
 ```
 
-2. Start the dev server:
+2. Run the development server
 
 ```bash
 npm run dev
 ```
 
-3. Open the app in your browser at the local Next.js URL.
+3. Open your browser at the local Next.js URL printed by the dev server.
 
-## Available scripts
+## Development scripts
 
-- `npm run dev` — start the development server
-- `npm run build` — create a production build
-- `npm run start` — run the production server
+- `npm run dev` — development server
+- `npm run build` — production build
+- `npm run start` — start production server
 
-## Project structure
+## Contributing
 
-- `app/layout.tsx` — root layout and metadata
-- `app/page.tsx` — landing page entry
-- `app/search/page.tsx` — search page
-- `app/feed/page.tsx` — feed page
-- `app/analyze/page.tsx` — analyzer page
-- `app/api/npm/search/route.ts` — search proxy
-- `app/api/advisories/route.ts` — advisories proxy
-- `app/api/analyze/route.ts` — analyzer proxy
-- `components/landing-page.tsx` — homepage composition
-- `components/search-packages-page.tsx` — search UI
-- `components/feed-browser.tsx` — feed UI
-- `components/ui.tsx` — shared UI primitives
-- `lib/advisories.ts` — advisory data helpers
+Contributions are welcome. For code changes, please open a PR against the `main` branch with a clear description of the change. Keep commits small and focused.
 
-## Notes
+If you plan to work on security-sensitive areas (analyzer, OSV queries, or proxy routes), please open an issue first to discuss the design.
 
-- The analyzer is designed for a no-login workflow.
-- Vulnerability results are displayed as readable cards and linked out to OSV.
-- The UI uses a dark, high-contrast security theme.
+## Security reporting
+
+If you discover a vulnerability in this project or the analyzer results, please report it privately via the `/security` page or connect on LinkedIn: https://www.linkedin.com/in/gourav-suresh/.
+
+## Project layout (high level)
+
+- `app/` — Next.js App Router pages and API routes (`/app/*`)
+- `components/` — UI components and layout pieces
+- `lib/` — helper utilities
+
+## License
+
+This repository is provided under the terms of the LICENSE file in the project root.
+
+---
+
+If you'd like, I can also add a short project demo GIF to the README or wire up a GitHub Actions workflow for CI — which would you prefer next?
