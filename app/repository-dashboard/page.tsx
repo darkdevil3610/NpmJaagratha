@@ -19,6 +19,14 @@ export default function RepositoryDashboardPage() {
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<RepositoryDashboardScanResponse | null>(null);
 
+  const navLinks = [
+    { label: 'Home', href: '/' },
+    { label: 'Search', href: '/search' },
+    { label: 'Feed', href: '/feed' },
+    { label: 'Analyzer', href: '/analyze' },
+
+  ];
+
   async function scanRepository(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setLoading(true);
@@ -64,6 +72,25 @@ export default function RepositoryDashboardPage() {
     <main className="relative overflow-hidden bg-[radial-gradient(circle_at_top,_rgba(16,185,129,0.14),_transparent_42%),linear-gradient(180deg,#050608_0%,#04070c_100%)]">
       <div className="absolute inset-0 opacity-35 grid-overlay" />
       <div className="relative mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <div className="mb-6 flex flex-col gap-3 rounded-3xl border border-white/[0.08] bg-black/30 p-3 backdrop-blur-xl sm:flex-row sm:items-center sm:justify-between">
+          <div className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-200">Repository Dashboard</div>
+          <nav className="flex flex-wrap gap-2">
+            {navLinks.map((link) => (
+              <a
+                key={link.label}
+                href={link.href}
+                className={`rounded-full border px-4 py-2 text-sm transition ${
+                  link.href === '/repository-dashboard'
+                    ? 'border-emerald-400/25 bg-emerald-400/10 text-emerald-100'
+                    : 'border-white/10 bg-white/5 text-zinc-200 hover:border-emerald-300/25 hover:bg-white/10 hover:text-white'
+                }`}
+              >
+                {link.label}
+              </a>
+            ))}
+          </nav>
+        </div>
+
         <Panel className="mb-8 border-emerald-400/15 bg-black/30 p-6 backdrop-blur-xl">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
             <div>
