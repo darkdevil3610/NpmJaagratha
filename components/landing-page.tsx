@@ -1,6 +1,16 @@
 "use client";
 
-import { motion } from 'framer-motion';
+import { type PropsWithChildren, useRef } from 'react';
+
+import {
+  type MotionValue,
+  motion,
+  useMotionTemplate,
+  useMotionValue,
+  useScroll,
+  useSpring,
+  useTransform,
+} from 'framer-motion';
 import {
   ArrowRight,
   BadgeCheck,
@@ -123,6 +133,69 @@ function formatRelativeTime(pubDate?: string) {
 
   const deltaDays = Math.round(deltaHours / 24);
   return `${deltaDays}d ago`;
+}
+
+type InteractiveBackdropProps = {
+  scrollYProgress: MotionValue<number>;
+  pointerX: MotionValue<number>;
+  pointerY: MotionValue<number>;
+};
+
+function InteractiveBackdrop({ scrollYProgress, pointerX, pointerY }: InteractiveBackdropProps) {
+  const cursorX = useSpring(pointerX, { stiffness: 80, damping: 18, mass: 0.35 });
+  const cursorY = useSpring(pointerY, { stiffness: 80, damping: 18, mass: 0.35 });
+  const secondaryX = useTransform(cursorX, (value) => value * 0.78);
+  const secondaryY = useTransform(cursorY, (value) => value * 0.78);
+  const primaryTransform = useMotionTemplate`translate3d(${cursorX}px, ${cursorY}px, 0) translate(-50%, -50%)`;
+  const secondaryTransform = useMotionTemplate`translate3d(${secondaryX}px, ${secondaryY}px, 0) translate(-50%, -50%)`;
+  const glowShift = useTransform(scrollYProgress, [0, 1], ['0px', '180px']);
+  const glowScale = useTransform(scrollYProgress, [0, 1], [1, 1.18]);
+  const gridShift = useTransform(scrollYProgress, [0, 1], ['0px', '260px']);
+  const reverseGlowShift = useTransform(scrollYProgress, [0, 1], ['0px', '-160px']);
+  const lowerGlowShift = useTransform(scrollYProgress, [0, 1], ['0px', '-220px']);
+
+  return (
+    <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
+      <motion.div
+        className="absolute left-0 top-0 h-[42rem] w-[42rem] rounded-full bg-emerald-300/[0.12] blur-[140px]"
+        style={{ x: glowShift, y: glowShift, scale: glowScale }}
+      />
+      <motion.div
+        className="absolute right-0 top-1/4 h-[34rem] w-[34rem] rounded-full bg-cyan-300/[0.08] blur-[150px]"
+        style={{ x: glowShift, y: reverseGlowShift }}
+      />
+      <motion.div
+        className="absolute bottom-0 left-1/2 h-[28rem] w-[28rem] -translate-x-1/2 rounded-full bg-amber-300/[0.07] blur-[130px]"
+        style={{ y: lowerGlowShift }}
+      />
+      <motion.div className="absolute inset-0 opacity-80" style={{ y: gridShift }}>
+        <div className="absolute inset-0 grid-overlay opacity-60" />
+      </motion.div>
+      <motion.div className="absolute h-64 w-64 rounded-full border border-emerald-300/30 bg-emerald-300/20 blur-3xl" style={{ transform: primaryTransform }} />
+      <motion.div className="absolute h-36 w-36 rounded-full border border-cyan-300/30 bg-cyan-300/18 blur-2xl" style={{ transform: secondaryTransform }} />
+    </div>
+  );
+}
+
+type RevealSectionProps = PropsWithChildren<{
+  className?: string;
+  id?: string;
+  delay?: number;
+}>;
+
+function RevealSection({ children, className, id, delay = 0 }: RevealSectionProps) {
+  return (
+    <motion.section
+      id={id}
+      className={className}
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.18 }}
+      transition={{ duration: 0.7, ease: 'easeOut', delay }}
+    >
+      {children}
+    </motion.section>
+  );
 }
 
 function HeroVisual() {
@@ -349,6 +422,10 @@ function ScanTimeline() {
 }
 
 export function LandingPage() {
+  const pageRef = useRef<HTMLElement | null>(null);
+  const pointerX = useMotionValue(0);
+  const pointerY = useMotionValue(0);
+  const { scrollYProgress } = useScroll({ target: pageRef, offset: ['start start', 'end end'] });
   const navLinks = [
     { label: 'Search', href: '/search' },
     { label: 'FEED', href: '/feed' },
@@ -357,11 +434,17 @@ export function LandingPage() {
   ];
 
   return (
-    <main className="relative overflow-hidden">
-      <div className="absolute inset-0 grid-overlay opacity-40" />
-      <div className="absolute left-1/2 top-0 h-[540px] w-[540px] -translate-x-1/2 rounded-full bg-emerald-400/[0.08] blur-[100px]" />
+    <main
+      ref={pageRef}
+      className="relative overflow-hidden"
+      onPointerMove={(event) => {
+        pointerX.set(event.clientX);
+        pointerY.set(event.clientY);
+      }}
+    >
+      <InteractiveBackdrop scrollYProgress={scrollYProgress} pointerX={pointerX} pointerY={pointerY} />
 
-      <div className="relative mx-auto max-w-7xl px-6 py-6 sm:px-8 lg:px-10">
+      <div className="relative z-10 mx-auto max-w-7xl px-6 py-6 sm:px-8 lg:px-10">
         <header className="flex items-center justify-between rounded-[2rem] border border-emerald-400/15 bg-[linear-gradient(120deg,rgba(5,22,14,0.9),rgba(4,9,14,0.92))] px-4 py-3 shadow-[0_18px_60px_rgba(0,0,0,0.36)] backdrop-blur-xl sm:px-5">
           <div className="flex items-center gap-3">
             <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-emerald-400/20 bg-emerald-400/10 text-emerald-200 shadow-[0_0_28px_rgba(124,255,107,0.18)]">
@@ -395,7 +478,12 @@ export function LandingPage() {
           </div>
         </header>
 
-        <section className="grid gap-14 pb-24 pt-16 lg:grid-cols-[1.02fr_0.98fr] lg:items-center lg:pt-24">
+        <motion.section
+          className="grid gap-14 pb-24 pt-16 lg:grid-cols-[1.02fr_0.98fr] lg:items-center lg:pt-24"
+          initial={{ opacity: 0, y: 28 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: 'easeOut' }}
+        >
           <div className="max-w-2xl">
             <SectionLabel>Security monitoring for npm</SectionLabel>
             <h1 className="mt-6 text-5xl font-semibold tracking-[-0.05em] text-white sm:text-6xl lg:text-7xl">
@@ -447,9 +535,9 @@ export function LandingPage() {
           </div>
 
           <HeroVisual />
-        </section>
+        </motion.section>
 
-        <section className="pb-24" id="features">
+        <RevealSection className="pb-24" id="features" delay={0.05}>
           <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <SectionLabel>Trusted Security Monitoring</SectionLabel>
@@ -478,9 +566,9 @@ export function LandingPage() {
               );
             })}
           </div>
-        </section>
+        </RevealSection>
 
-        <section className="pb-24">
+        <RevealSection className="pb-24" delay={0.08}>
           <Panel className="grid gap-8 lg:grid-cols-[0.92fr_1.08fr] lg:items-center">
             <div>
               <SectionLabel>How It Works</SectionLabel>
@@ -500,9 +588,9 @@ export function LandingPage() {
               ))}
             </div>
           </Panel>
-        </section>
+        </RevealSection>
 
-        <section className="pb-24">
+        <RevealSection className="pb-24" delay={0.1}>
           <div className="mb-8">
             <SectionLabel>Security Features</SectionLabel>
             <h2 className="mt-4 text-3xl font-semibold text-white sm:text-4xl">Deep checks for every package move.</h2>
@@ -517,17 +605,17 @@ export function LandingPage() {
               </div>
             ))}
           </div>
-        </section>
+        </RevealSection>
 
-        <section className="pb-24" id="scan-preview">
+        <RevealSection className="pb-24" id="scan-preview" delay={0.12}>
           <ScanTimeline />
-        </section>
+        </RevealSection>
 
-        <section className="pb-24">
+        <RevealSection className="pb-24" delay={0.14}>
           <LiveFeed />
-        </section>
+        </RevealSection>
 
-        <section className="pb-24">
+        <RevealSection className="pb-24" delay={0.16}>
           <div className="mb-8">
             <SectionLabel>Malayalam Alerts</SectionLabel>
             <h2 className="mt-4 text-3xl font-semibold text-white sm:text-4xl">Subtle cultural touch. Premium security tone.</h2>
@@ -543,9 +631,9 @@ export function LandingPage() {
               </div>
             ))}
           </div>
-        </section>
+        </RevealSection>
 
-        <section id="package-json-scan" className="pb-10">
+        <RevealSection id="package-json-scan" className="pb-10" delay={0.18}>
           <Panel className="flex flex-col gap-8 overflow-hidden lg:flex-row lg:items-center lg:justify-between">
             <div className="max-w-2xl">
               <SectionLabel>Get Started</SectionLabel>
@@ -564,7 +652,7 @@ export function LandingPage() {
               </Button>
             </div>
           </Panel>
-        </section>
+        </RevealSection>
 
         <footer className="border-t border-white/[0.08] py-8 text-sm text-zinc-400">
           <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
