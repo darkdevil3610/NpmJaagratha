@@ -2,6 +2,8 @@ import './globals.css';
 
 import type { Metadata } from 'next';
 
+import { GlobalCursorEffect } from '@/components/global-cursor-effect';
+
 export const metadata: Metadata = {
   title: 'NpmJaagratha',
   description:
@@ -11,7 +13,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <div className="relative z-0">{children}</div>
+        <GlobalCursorEffect />
+      </body>
     </html>
   );
 }
