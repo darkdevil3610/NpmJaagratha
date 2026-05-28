@@ -25,6 +25,7 @@ NpmJaagratha is a lightweight, no-login security dashboard for npm projects. Pas
 - `/search` — Package search UI
 - `/feed` — Live vulnerability feed
 - `/analyze` — Paste a `package.json` or package name to scan
+- `/repository-dashboard` — Scan a public GitHub repository for manifests, sensitive files, and dependency issues
 - `/contact` — Contact / LinkedIn
 - `/security` — Security reporting guidance
 
@@ -33,6 +34,7 @@ NpmJaagratha is a lightweight, no-login security dashboard for npm projects. Pas
 - `GET /api/npm/search` — npm search proxy
 - `GET /api/advisories` — advisories feed proxy
 - `POST /api/analyze` — package and `package.json` analysis proxy (server-side)
+- `POST /api/repository-dashboard` — public GitHub repository scan proxy
 
 ## Quick start
 

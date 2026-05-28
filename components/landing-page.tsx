@@ -91,6 +91,7 @@ const defaultFeedItems: FeedItem[] = [
 
 const footerLinks = [
   { label: 'GitHub', href: 'https://github.com/darkdevil3610/NpmJaagratha' },
+  { label: 'Repo Dashboard', href: '/repository-dashboard' },
   { label: 'Security', href: '/security' },
   { label: 'Contact', href: '/contact' },
 ];
@@ -351,6 +352,7 @@ export function LandingPage() {
   const navLinks = [
     { label: 'Search', href: '/search' },
     { label: 'FEED', href: '/feed' },
+    { label: 'Repo Dashboard', href: '/repository-dashboard' },
     { label: 'Features', href: '#features' },
   ];
 
