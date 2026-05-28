@@ -1,6 +1,6 @@
 "use client";
 
-import { type PropsWithChildren } from 'react';
+import { type PropsWithChildren, useState } from 'react';
 
 import { motion } from 'framer-motion';
 import {
@@ -17,6 +17,8 @@ import {
   Sparkles,
   TerminalSquare,
   Workflow,
+  Menu,
+  X,
 } from 'lucide-react';
 
 import { Button, Metric, Panel, SectionLabel } from '@/components/ui';
@@ -372,6 +374,8 @@ function ScanTimeline() {
 }
 
 export function LandingPage() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   const navLinks = [
     { label: 'Search', href: '/search' },
     { label: 'FEED', href: '/feed' },
@@ -382,7 +386,7 @@ export function LandingPage() {
   return (
     <main className="relative overflow-hidden">
       <div className="relative z-10 mx-auto max-w-7xl px-6 py-6 sm:px-8 lg:px-10">
-        <header className="flex items-center justify-between rounded-[2rem] border border-emerald-400/15 bg-[linear-gradient(120deg,rgba(5,22,14,0.9),rgba(4,9,14,0.92))] px-4 py-3 shadow-[0_18px_60px_rgba(0,0,0,0.36)] backdrop-blur-xl sm:px-5">
+        <header className="relative flex items-center justify-between rounded-[2rem] border border-emerald-400/15 bg-[linear-gradient(120deg,rgba(5,22,14,0.9),rgba(4,9,14,0.92))] px-4 py-3 shadow-[0_18px_60px_rgba(0,0,0,0.36)] backdrop-blur-xl sm:px-5">
           <div className="flex items-center gap-3">
             <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-emerald-400/20 bg-emerald-400/10 text-emerald-200 shadow-[0_0_28px_rgba(124,255,107,0.18)]">
               <ShieldCheck className="h-5 w-5" />
@@ -392,6 +396,28 @@ export function LandingPage() {
               <div className="text-xs text-zinc-400">Node.js security, built with jaagratha.</div>
             </div>
           </div>
+
+          {/* Mobile menu button */}
+          <button
+            aria-expanded={mobileMenuOpen}
+            aria-controls="mobile-nav"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="inline-flex items-center gap-2 rounded-full p-2 text-zinc-200 hover:bg-white/5 md:hidden"
+          >
+            {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
+          {mobileMenuOpen ? (
+            <div id="mobile-nav" className="absolute right-4 top-full mt-3 w-56 rounded-2xl border border-white/[0.06] bg-black/80 p-3 backdrop-blur-md md:hidden">
+              <nav className="flex flex-col gap-2">
+                {navLinks.map((link) => (
+                  <a key={link.label} href={link.href} className="rounded px-3 py-2 text-sm font-semibold text-zinc-200 hover:bg-white/5">
+                    {link.label}
+                  </a>
+                ))}
+                <a href="/analyze" className="mt-2 inline-flex items-center justify-center rounded-full bg-emerald-300 px-3 py-2 text-sm font-semibold text-black">Analyzer</a>
+              </nav>
+            </div>
+          ) : null}
 
           <div className="hidden items-center gap-3 md:flex">
             <nav className="flex items-center gap-1 rounded-full border border-white/10 bg-black/25 p-1.5">
